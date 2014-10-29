@@ -18,6 +18,13 @@ replacement command / selection, not by the register contents. This avoids
 surprises like when the replacement text was a linewise yank, but the
 replacement is characterwise: In this case, no additional newline is inserted.
 
+SEE ALSO
+- ReplaceWithSameIndentRegister.vim (vimscript #5046) is a companion plugin
+  for the special (but frequent) case of replacing lines while keeping the
+  original indent.
+- LineJugglerCommands.vim (vimscript #4465) provides a similar :Replace [["]x]
+  Ex command.
+
 RELATED WORKS
 - regreplop.vim (vimscript #2702) provides an alternative implementation of
   the same idea.
@@ -32,10 +39,27 @@ RELATED WORKS
   moved-over text.
 
 USAGE
-["x][count]gr{motion}   Replace {motion} text with the contents of register x.
+[count]["x]gr{motion}   Replace {motion} text with the contents of register x.
                         Especially when using the unnamed register, this is
                         quicker than "_d{motion}P or "_c{motion}<C-R>"
-["x][count]grr          Replace [count] lines with the contents of register x.
+[count]["x]grr          Replace [count] lines with the contents of register x.
                         To replace from the cursor position to the end of the
                         line use ["x]gr$
 {Visual}["x]gr          Replace the selection with the contents of register x.
+
+DEPENDENCIES
+- Requires Vim 7.0 or higher.
+- repeat.vim (vimscript #2136) plugin (optional)
+  To support repetition with a register other than the default register, you
+  need version 1.1 or later.
+- visualrepeat.vim (vimscript #3848) plugin (version 2.00 or higher; optional)
+
+CONFIGURATION
+The default mappings override the (rarely used, but somewhat related) gr
+command (replace virtual characters under the cursor with {char}).
+If you want to use different mappings, map your keys to the
+<Plug>ReplaceWithRegister... mapping targets _before_ sourcing the script
+(e.g. in your vimrc):
+    nmap <Leader>r  <Plug>ReplaceWithRegisterOperator
+    nmap <Leader>rr <Plug>ReplaceWithRegisterLine
+    xmap <Leader>r  <Plug>ReplaceWithRegisterVisual
